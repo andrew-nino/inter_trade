@@ -50,5 +50,5 @@ func NewPostgresDB(cfg *config.Config) (*sqlx.DB, error) {
 		pg.connAttempts--
 	}
 	
-	return db, nil
+	return db, err
 }

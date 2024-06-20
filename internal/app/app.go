@@ -37,6 +37,11 @@ func Run(configPath string) {
 	}
 	defer db.Close()
 
+	// Migrates running
+	log.Info("Migrates running...")
+	m := NewMigration(cfg)
+	m.Steps(1)
+
 	// Services dependencies
 	log.Info("Initializing services...")
 
@@ -45,14 +50,14 @@ func Run(configPath string) {
 	handlers := handler.NewHandler(service)
 
 	// HTTP server
+	log.Info("Starting http server...")
+
 	srv := new(httpserver.Server)
 
 	go func() {
 		if err := srv.Run(cfg.HTTP.Port, handlers.InitRoutes()); err != nil {
 			log.Fatalf("error occured while running http server: %s", err.Error())
 		}
-
-		log.Info("Starting http server...")
 	}()
 
 	log.Print(cfg.App.Name + " Started")
@@ -65,26 +70,4 @@ func Run(configPath string) {
 
 	//TODO Корректный выход
 
-	//
-	// log.Debugf("Server port: %s", cfg.HTTP.Port)
-	// httpServer := httpserver.New(handler, httpserver.Port(cfg.HTTP.Port))
-
-	// // Waiting signal
-	// log.Info("Configuring graceful shutdown...")
-	// interrupt := make(chan os.Signal, 1)
-	// signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
-
-	// select {
-	// case s := <-interrupt:
-	// 	log.Info("app - Run - signal: " + s.String())
-	// case err = <-httpServer.Notify():
-	// 	log.Error(fmt.Errorf("app - Run - httpServer.Notify: %w", err))
-	// }
-
-	// // Graceful shutdown
-	// log.Info("Shutting down...")
-	// err = httpServer.Shutdown()
-	// if err != nil {
-	// 	log.Error(fmt.Errorf("app - Run - httpServer.Shutdown: %w", err))
-	// }
 }
