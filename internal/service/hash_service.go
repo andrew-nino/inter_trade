@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"international_trade/internal/repo/pgdb"
 
 	. "international_trade/internal/service/processing"
@@ -18,7 +17,7 @@ func NewHashService(repos pgdb.HashStorage) *HashService {
 
 func (h *HashService) CreateNewHash(input string, typeHash string) (string, error) {
 
-	hash, err := Processing(input, typeHash)
+	hash, _, err := Processing(input, typeHash)
 	if err != nil {
 		return "", err
 	}
@@ -28,13 +27,20 @@ func (h *HashService) CreateNewHash(input string, typeHash string) (string, erro
 		return "", err
 	}
 
-	val, err := redis.RedisClient.Get(input).Result()
+	_, err = redis.RedisClient.Get(input).Result()
 	if err != nil {
 		return "", err
 	}
 
+	h.repo.AddingHash(input, typeHash, hash)
 
-	h.repo.AddingHash(input, string(hash))
+	return hash, err
+}
 
-	return fmt.Sprintf("key = %s, value = %s", input, val), err
+func (h *HashService) UpdateHash(input string, typeHash string) (string, error) {
+	return "", nil
+}
+
+func (h *HashService) GetHash(input string) (string, error) {
+	return "", nil
 }

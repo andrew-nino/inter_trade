@@ -7,6 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	MessageOK = "success "
+)
+
 func (h *Handler) addingHash(c *gin.Context) {
 
 	var input entity.StringToHash
@@ -18,11 +22,30 @@ func (h *Handler) addingHash(c *gin.Context) {
 		return
 	}
 
-	add_time, err := h.services.ServingString.CreateNewHash(input.String, typeHash)
+	hash, err := h.services.ServingString.CreateNewHash(input.String, typeHash)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, add_time)
+	c.JSON(http.StatusOK, hash)
+}
+
+func (h *Handler) deleteHash(c *gin.Context) {
+
+	var input entity.StringToHash
+	typeHash := c.Param("type")
+
+	if err := c.BindJSON(&input); err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	_, err := h.services.ServingString.DeleteteHash(input.String, typeHash)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, MessageOK)
 }

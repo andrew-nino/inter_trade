@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS users
 CREATE TABLE IF NOT EXISTS hash_storage
 (
     id              serial       not null unique,
+    type_hash       varchar(10)  not null,
     key             varchar(255) not null,
-    hash            bytea        not null unique,
+    hash            char(64)     not null unique,
     created_at      timestamp    not null default now()
 );

@@ -13,10 +13,8 @@ type Authorization interface {
 
 type ServingString interface {
 	CreateNewHash(input string, typeHash string) (string,error)
-	// GetAllCars() ([]autocatalog.Car, error)
-	// GetCarById(carId int) (autocatalog.Car, error)
-	// Delete(carId int) error
-	// UpdateCatalog(input autocatalog.Car) error
+	GetHash(input string) (string, error)
+	DeleteteHash(input string, typeHash string) (string, error)
 }
 
 type Service struct {

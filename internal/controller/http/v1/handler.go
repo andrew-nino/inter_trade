@@ -29,7 +29,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		hash := api.Group("/hash")
 		{
 			hash.POST("/:type", h.addingHash)
-			// hash.DELETE("/:type", h.deleteHash)
+			hash.DELETE("/:type", h.deleteHash)
 
 
 			// cars.GET("/", h.getAllCars)
