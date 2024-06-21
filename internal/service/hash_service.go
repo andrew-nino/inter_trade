@@ -18,6 +18,10 @@ func NewHashService(repos pgdb.HashStorage) *HashService {
 
 func (h *HashService) AddingHash(inputKey string, typeHash string) (string, error) {
 
+	err := checkLengthString(inputKey)
+	if err != nil {
+		return "", err
+	}
 	hash, err := redisdb.CheckHash(inputKey, typeHash)
 	if err != nil {
 
@@ -34,13 +38,21 @@ func (h *HashService) AddingHash(inputKey string, typeHash string) (string, erro
 }
 func (h *HashService) GetHash(inputKey, typeHash string) (string, error) {
 
+	err := checkLengthString(inputKey)
+	if err != nil {
+		return "", err
+	}
 	hash, err := redisdb.CheckHash(inputKey, typeHash)
 	return hash, err
 }
 
 func (h *HashService) DeleteHash(inputKey string, typeHash string) error {
 
-	err := redisdb.DeleteHash(inputKey, typeHash)
+	err := checkLengthString(inputKey)
+	if err != nil {
+		return err
+	}
+	err = redisdb.DeleteHash(inputKey, typeHash)
 	if err != nil {
 		fmt.Errorf("error deleting hash on Redis: %w", err)
 	}
@@ -49,4 +61,12 @@ func (h *HashService) DeleteHash(inputKey string, typeHash string) error {
 		fmt.Errorf("error deleting hash on PG: %w", err)
 	}
 	return err
+}
+
+func checkLengthString(inputKey string) error {
+
+	if len(inputKey) > 255 {
+		return fmt.Errorf("key is too long")
+	}
+	return nil
 }
