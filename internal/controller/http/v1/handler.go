@@ -24,16 +24,19 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		auth.POST("/sign-in", h.signIn)
 	}
 
-	// api := router.Group("/api", h.userIdentity)
-	// {
-	// 	cars := api.Group("/cars")
-	// 	{
-	// 		cars.POST("/", h.addingCars)
-	// 		cars.GET("/", h.getAllCars)
-	// 		cars.PUT("/", h.updateCatalog)
-	// 		cars.GET("/:id", h.getCarById)
-	// 		cars.DELETE("/:id", h.deleteCar)
-	// 	}
-	// }
+	api := router.Group("/api/v1", h.userIdentity)
+	{
+		hash := api.Group("/hash")
+		{
+			hash.POST("/:type", h.addingHash)
+			// hash.DELETE("/:type", h.deleteHash)
+
+
+			// cars.GET("/", h.getAllCars)
+			// cars.PUT("/", h.updateCatalog)
+			// cars.GET("/:id", h.getCarById)
+
+		}
+	}
 	return router
 }

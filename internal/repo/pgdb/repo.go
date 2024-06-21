@@ -8,7 +8,7 @@ import (
 
 const (
 	usersTable = "users"
-	listString = "list_to-hash"
+	hashTable = "hash_storage"
 )
 
 type Authorization interface {
@@ -16,8 +16,8 @@ type Authorization interface {
 	GetUser(username, password string) (entity.User, error)
 }
 
-type ListStrings interface {
-	// AddingCars(list autocatalog.Car) error
+type HashStorage interface {
+	AddingHash(input, hash string) (string, error)
 	// GetAll() ([]autocatalog.Car, error)
 	// GetById(carId int) (autocatalog.Car, error)
 	// Delete(carId int) error
@@ -26,12 +26,12 @@ type ListStrings interface {
 
 type Repository struct {
 	Authorization
-	ListStrings
+	HashStorage
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthPostgres(db),
-		// ListStrings:   NewListCarPostgres(db),
+		HashStorage:   NewHashToPostgres(db),
 	}
 }

@@ -10,7 +10,7 @@ type User struct {
 }
 
 type StringToHash struct {
-	ID_User   int       `db:"id_user"`
 	String    string    `db:"string"`
 	CreatedAt time.Time `db:"created_at"`
 }
+

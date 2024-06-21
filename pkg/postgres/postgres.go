@@ -13,10 +13,7 @@ import (
 const (
 	defaultConnAttempts = 10
 	defaultConnTimeout  = time.Second
-
-	
 )
-
 
 type Postgres struct {
 	connAttempts int
@@ -49,6 +46,6 @@ func NewPostgresDB(cfg *config.Config) (*sqlx.DB, error) {
 		time.Sleep(pg.connTimeout)
 		pg.connAttempts--
 	}
-	
+
 	return db, err
 }

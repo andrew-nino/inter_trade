@@ -1,8 +1,8 @@
 package service
 
 import (
-    "international_trade/internal/entity"
-    repo "international_trade/internal/repo/pgdb"
+	"international_trade/internal/entity"
+	repo "international_trade/internal/repo/pgdb"
 )
 
 type Authorization interface {
@@ -11,8 +11,8 @@ type Authorization interface {
 	ParseToken(token string) (int, error)
 }
 
-type ListCars interface {
-	// AddingCars(autocatalog.Car) error
+type ServingString interface {
+	CreateNewHash(input string, typeHash string) (string,error)
 	// GetAllCars() ([]autocatalog.Car, error)
 	// GetCarById(carId int) (autocatalog.Car, error)
 	// Delete(carId int) error
@@ -21,12 +21,12 @@ type ListCars interface {
 
 type Service struct {
 	Authorization
-	ListCars
+	ServingString
 }
 
 func NewService(repos *repo.Repository) *Service {
 	return &Service{
 		Authorization: NewAuthService(repos.Authorization),
-		// ListCars:      NewListCarsService(repos.ListCars),
+		ServingString: NewHashService(repos.HashStorage),
 	}
 }

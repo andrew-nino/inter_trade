@@ -29,8 +29,6 @@ type (
 	}
 
 	PG struct {
-		// MaxPoolSize int    `env-required:"true" yaml:"max_pool_size" env:"PG_MAX_POOL_SIZE"`
-		// URL         string `env-required:"true"                      env:"PG_URL"`
 		Host        string
 		Port        string
 		Username    string
