@@ -30,12 +30,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			hash.POST("/:type", h.addingHash)
 			hash.DELETE("/:type", h.deleteHash)
-
-
-			// cars.GET("/", h.getAllCars)
-			// cars.PUT("/", h.updateCatalog)
-			// cars.GET("/:id", h.getCarById)
-
+			hash.GET("/:type", h.getValue)
 		}
 	}
 	return router

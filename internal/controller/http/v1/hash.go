@@ -46,3 +46,21 @@ func (h *Handler) deleteHash(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, MessageOK)
 }
+
+func (h *Handler) getValue(c *gin.Context) {
+
+	var input entity.StringToHash
+	typeHash := c.Param("type")
+
+	if err := c.BindJSON(&input); err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	hash, err := h.services.ServingString.GetHash(input.String, typeHash)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, hash)
+}

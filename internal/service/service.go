@@ -12,8 +12,8 @@ type Authorization interface {
 }
 
 type ServingString interface {
-	AddingHash(input string, typeHash string) (string, error)
-	GetHash(input string) (string, error)
+	AddingHash(input, typeHash string) (string, error)
+	GetHash(input, typeHash string) (string, error)
 	DeleteHash(input, typeHash string) error
 }
 

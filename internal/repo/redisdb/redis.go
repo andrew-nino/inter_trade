@@ -2,7 +2,6 @@ package redisdb
 
 import (
 	. "international_trade/pkg/redis"
-	"log"
 )
 
 func CreateNewEntry(inputKey string, typeHash string, hash string) error {

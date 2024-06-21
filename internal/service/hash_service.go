@@ -2,9 +2,8 @@ package service
 
 import (
 	"fmt"
-	"international_trade/internal/repo/pgdb"
-	"log"
 
+	"international_trade/internal/repo/pgdb"
 	"international_trade/internal/repo/redisdb"
 	. "international_trade/internal/service/processing"
 )
@@ -33,22 +32,19 @@ func (h *HashService) AddingHash(inputKey string, typeHash string) (string, erro
 
 	return hash, err
 }
+func (h *HashService) GetHash(inputKey, typeHash string) (string, error) {
 
-func (h *HashService) UpdateHash(input string, typeHash string) (string, error) {
-	return "", nil
+	hash, err := redisdb.CheckHash(inputKey, typeHash)
+	return hash, err
 }
 
-func (h *HashService) GetHash(input string) (string, error) {
-	return "", nil
-}
+func (h *HashService) DeleteHash(inputKey string, typeHash string) error {
 
-func (h *HashService) DeleteHash(input string, typeHash string) error {
-
-	err := redisdb.DeleteHash(input, typeHash)
+	err := redisdb.DeleteHash(inputKey, typeHash)
 	if err != nil {
 		fmt.Errorf("error deleting hash on Redis: %w", err)
 	}
-	err = h.repo.DeleteHash(input, typeHash)
+	err = h.repo.DeleteHash(inputKey, typeHash)
 	if err != nil {
 		fmt.Errorf("error deleting hash on PG: %w", err)
 	}
