@@ -41,11 +41,10 @@ func (h *Handler) deleteHash(c *gin.Context) {
 		return
 	}
 
-	_, err := h.services.ServingString.DeleteteHash(input.String, typeHash)
+	err := h.services.ServingString.DeleteHash(input.String, typeHash)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-
 	c.JSON(http.StatusOK, MessageOK)
 }

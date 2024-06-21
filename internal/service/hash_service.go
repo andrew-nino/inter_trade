@@ -1,10 +1,11 @@
 package service
 
 import (
+	"fmt"
 	"international_trade/internal/repo/pgdb"
 
+	"international_trade/internal/repo/redisdb"
 	. "international_trade/internal/service/processing"
-	"international_trade/pkg/redis"
 )
 
 type HashService struct {
@@ -22,15 +23,7 @@ func (h *HashService) CreateNewHash(input string, typeHash string) (string, erro
 		return "", err
 	}
 
-	err = redis.RedisClient.Set(input, hash, 0).Err()
-	if err != nil {
-		return "", err
-	}
-
-	_, err = redis.RedisClient.Get(input).Result()
-	if err != nil {
-		return "", err
-	}
+	redisdb.CreateNewEntry(input, typeHash, hash)
 
 	h.repo.AddingHash(input, typeHash, hash)
 
@@ -43,4 +36,17 @@ func (h *HashService) UpdateHash(input string, typeHash string) (string, error) 
 
 func (h *HashService) GetHash(input string) (string, error) {
 	return "", nil
+}
+
+func (h *HashService) DeleteHash(input string, typeHash string) error {
+
+	err := redisdb.DeleteHash(input, typeHash)
+	if err!= nil {
+        fmt.Errorf("error deleting hash on Redis: %w", err)
+    }
+	err = h.repo.DeleteHash(input, typeHash)
+	if err!= nil {
+        fmt.Errorf("error deleting hash on PG: %w", err)
+    }
+	return err
 }

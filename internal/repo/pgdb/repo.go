@@ -20,7 +20,7 @@ type HashStorage interface {
 	AddingHash(input, typeHash, hash string) (string, error)
 	// GetAll() ([]autocatalog.Car, error)
 	// GetById(carId int) (autocatalog.Car, error)
-	// Delete(carId int) error
+	DeleteHash(input, typeHash string) error
 	// UpdateCatalog(input autocatalog.Car) error
 }
 

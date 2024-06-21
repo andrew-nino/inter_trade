@@ -12,9 +12,9 @@ type Authorization interface {
 }
 
 type ServingString interface {
-	CreateNewHash(input string, typeHash string) (string,error)
+	CreateNewHash(input string, typeHash string) (string, error)
 	GetHash(input string) (string, error)
-	DeleteteHash(input string, typeHash string) (string, error)
+	DeleteHash(input, typeHash string) error
 }
 
 type Service struct {
