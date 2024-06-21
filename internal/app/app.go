@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"os"
 	"os/signal"
 	"syscall"
@@ -73,6 +74,11 @@ func Run(configPath string) {
 
 	log.Print(cfg.App.Name + " Shutting Down")
 
-	//TODO Корректный выход
+	if err := srv.Shutdown(context.Background()); err != nil {
+		log.Errorf("error occured on server shutting down: %s", err.Error())
+	}
 
+	if err := db.Close(); err != nil {
+		log.Errorf("error occured on db connection close: %s", err.Error())
+	}
 }
