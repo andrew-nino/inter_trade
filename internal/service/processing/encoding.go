@@ -1,8 +1,8 @@
 package processing
 
-import "encoding/base64"
+import "encoding/hex"
 
 func encodingBase64(b []byte) string {
 
-	return base64.StdEncoding.EncodeToString(b)
+	return hex.EncodeToString(b)
 }
