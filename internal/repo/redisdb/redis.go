@@ -2,6 +2,7 @@ package redisdb
 
 import (
 	. "international_trade/pkg/redis"
+	"log"
 )
 
 func CreateNewEntry(inputKey string, typeHash string, hash string) error {
@@ -25,4 +26,12 @@ func DeleteHash(key string, typeHash string) error {
 	fullKey := key + "/" + typeHash
 	err := RedisClient.Del(fullKey).Err()
 	return err
+}
+
+func CheckHash(inputKey string, typeHash string) (string, error) {
+
+	fullKey := inputKey + "/" + typeHash
+	hash, err := RedisClient.Get(fullKey).Result()
+
+	return hash, err
 }

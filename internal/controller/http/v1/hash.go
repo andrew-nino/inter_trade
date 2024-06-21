@@ -14,7 +14,6 @@ const (
 func (h *Handler) addingHash(c *gin.Context) {
 
 	var input entity.StringToHash
-
 	typeHash := c.Param("type")
 
 	if err := c.BindJSON(&input); err != nil {
@@ -22,12 +21,11 @@ func (h *Handler) addingHash(c *gin.Context) {
 		return
 	}
 
-	hash, err := h.services.ServingString.CreateNewHash(input.String, typeHash)
+	hash, err := h.services.ServingString.AddingHash(input.String, typeHash)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-
 	c.JSON(http.StatusOK, hash)
 }
 

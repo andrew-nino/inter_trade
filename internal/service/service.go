@@ -12,7 +12,7 @@ type Authorization interface {
 }
 
 type ServingString interface {
-	CreateNewHash(input string, typeHash string) (string, error)
+	AddingHash(input string, typeHash string) (string, error)
 	GetHash(input string) (string, error)
 	DeleteHash(input, typeHash string) error
 }
