@@ -16,6 +16,7 @@ import (
 
 	httpserver "international_trade/pkg/httpserver"
 	"international_trade/pkg/postgres"
+	"international_trade/pkg/redis"
 )
 
 func Run(configPath string) {
@@ -41,6 +42,10 @@ func Run(configPath string) {
 	log.Info("Migrates running...")
 	m := NewMigration(cfg)
 	m.Steps(1)
+
+	// Starting Redis
+	log.Info("Initializing Redis...")
+	redis.ConnectRedis(cfg)
 
 	// Services dependencies
 	log.Info("Initializing services...")

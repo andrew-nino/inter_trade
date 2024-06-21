@@ -26,6 +26,8 @@ func NewPostgresDB(cfg *config.Config) (*sqlx.DB, error) {
 		connAttempts: defaultConnAttempts,
 		connTimeout:  defaultConnTimeout,
 	}
+	fmt.Printf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s\n",
+	cfg.PG.Host, cfg.PG.Port, cfg.PG.Username, cfg.PG.DBName, cfg.PG.Password, cfg.PG.SSLMode)
 
 	db, err := sqlx.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
 		cfg.PG.Host, cfg.PG.Port, cfg.PG.Username, cfg.PG.DBName, cfg.PG.Password, cfg.PG.SSLMode))

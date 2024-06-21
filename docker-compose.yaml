@@ -1,5 +1,19 @@
 services:
 
+  app:
+    container_name: inter_trade
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "${HTTP_PORT}:${HTTP_PORT}"
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    networks:
+      - backend
+
   postgres:
     container_name: inter_trade_pgdb
     image: postgres
@@ -10,20 +24,17 @@ services:
     ports:
       - "5436:5432"
     restart: unless-stopped
-
-  app:
-    container_name: inter_trade
-    build: .
-    # volumes:
-    #   - ./logs:/logs
-    #   - ./secrets:/secrets
-    env_file:
-      - .env
-    ports:
-      - "${HTTP_PORT}:${HTTP_PORT}"
-    depends_on:
-      - postgres
-    restart: unless-stopped
+    networks:
+      - backend
+        
+  redis:
+    container_name: redis
+    image: redis:alpine3.20
+    networks:
+      - backend
 
 volumes:
   pg-data:
+
+networks:
+  backend:

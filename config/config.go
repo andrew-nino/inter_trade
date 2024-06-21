@@ -2,17 +2,18 @@ package config
 
 import (
 	"fmt"
-	"github.com/ilyakaznacheev/cleanenv"
 	"path"
-	// "time"
+
+	"github.com/ilyakaznacheev/cleanenv"
 )
 
 type (
 	Config struct {
-		App  `yaml:"app"`
-		HTTP `yaml:"http"`
-		Log  `yaml:"log"`
-		PG   `yaml:"postgres"`
+		App   `yaml:"app"`
+		HTTP  `yaml:"http"`
+		Log   `yaml:"log"`
+		PG    `yaml:"postgres"`
+		REDIS `yaml:"redis"`
 	}
 
 	App struct {
@@ -29,12 +30,18 @@ type (
 	}
 
 	PG struct {
-		Host        string
-		Port        string
-		Username    string
-		Password    string
-		DBName      string
-		SSLMode     string
+		Host     string `env-required:"true" yaml:"host" env:"POSTGRES_HOST"`
+		Port     string `env-required:"true" yaml:"port" env:"POSTGRES_PORT"`
+		Username string
+		Password string `env-required:"true" yaml:"password" env:"POSTGRES_PASSWORD"`
+		DBName   string
+		SSLMode  string
+	}
+
+	REDIS struct {
+		Host     string `env-required:"true" yaml:"host" env:"REDIS_HOST"`
+		Port     string `env-required:"true" yaml:"port" env:"REDIS_PORT"`
+		Password string `yaml:"password" env:"REDIS_PASSWORD"`
 	}
 )
 

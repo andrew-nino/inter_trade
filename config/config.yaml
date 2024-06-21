@@ -1,17 +1,21 @@
 app:
-  name: 'int_trade_backend'
-  version: '1.0.0'
+  name: "int_trade_backend"
+  version: "1.0.0"
 
 postgres:
-    username: "postgres"
-    host: "postgres"
-    port: "5432"
-    dbname: "postgres"
-    sslmode: "disable"
-    password: "qwerty"
+  username: "postgres"
+  host: "backend"
+  port: "5432"
+  dbname: "postgres"
+  sslmode: "disable"
+  password: "qwerty"
 
 http:
   port: 8080
 
 log:
-  level: 'debug'
+  level: "debug"
+
+redis:
+  host: "backend"
+  port: "6379"
