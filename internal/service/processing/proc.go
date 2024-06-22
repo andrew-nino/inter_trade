@@ -20,8 +20,9 @@ func generateRandomSalt(saltSize int) []byte {
 	}
 	return salt
 }
+
 // We get a hash from a string taking into account the type of algorithm.
-func Processing(stringToHash string, typeHash string) (string, string, error) {
+func Processing(stringToHash string, typeHash string) (string, error) {
 
 	var err error
 	var salt []byte
@@ -31,35 +32,32 @@ func Processing(stringToHash string, typeHash string) (string, string, error) {
 		salt = generateRandomSalt(saltSize)
 	})
 
+	hashBytes, err := hashString(stringToHash, typeHash, salt)
+
+	return encodingBase64(hashBytes), err
+}
+
+func hashString(inputString string, typeHash string, salt []byte) ([]byte, error) {
+
+	var err error
+	stringBytes := []byte(inputString)
+
 	switch typeHash {
 
 	case "sha256":
-		return encodingBase64(hashPassword_sha256(stringToHash, salt)), typeHash, nil
+		sha256Hasher := sha256.New()
+		stringBytes = append(stringBytes, salt...)
+		_, err = sha256Hasher.Write(stringBytes)
+		return sha256Hasher.Sum(nil), err
+
 	case "md5":
-		return encodingBase64(hashPassword_MD5(stringToHash, salt)), typeHash, nil
+		md5Hasher := md5.New()
+		stringBytes = append(stringBytes, salt...)
+		_, err = md5Hasher.Write(stringBytes)
+		return md5Hasher.Sum(nil), err
 
 	default:
 		err = fmt.Errorf("algorithm type is not defined")
 	}
-	return "", "", err
-}
-
-func hashPassword_sha256(password string, salt []byte) []byte {
-
-	passwordBytes := []byte(password)
-	sha256Hasher := sha256.New()
-	passwordBytes = append(passwordBytes, salt...)
-	sha256Hasher.Write(passwordBytes)
-
-	return sha256Hasher.Sum(nil)
-}
-
-func hashPassword_MD5(password string, salt []byte) []byte {
-
-	passwordBytes := []byte(password)
-	md5Hasher := md5.New()
-	passwordBytes = append(passwordBytes, salt...)
-	md5Hasher.Write(passwordBytes)
-
-	return md5Hasher.Sum(nil)
+	return stringBytes, err
 }

@@ -27,7 +27,7 @@ func (h *HashService) AddingHash(inputKey string, typeHash string) (string, erro
 	hash, err := redisdb.CheckHash(inputKey, typeHash)
 	if err != nil {
 
-		hash, _, err = Processing(inputKey, typeHash)
+		hash, err = Processing(inputKey, typeHash)
 		if err != nil {
 			return "", err
 		}
