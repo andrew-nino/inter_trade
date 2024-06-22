@@ -20,7 +20,7 @@ func generateRandomSalt(saltSize int) []byte {
 	}
 	return salt
 }
-
+// We get a hash from a string taking into account the type of algorithm.
 func Processing(stringToHash string, typeHash string) (string, string, error) {
 
 	var err error

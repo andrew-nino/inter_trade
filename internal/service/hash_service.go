@@ -16,12 +16,14 @@ func NewHashService(repos pgdb.HashStorage) *HashService {
 	return &HashService{repo: repos}
 }
 
+// Create a new hash if no existing value is found for the given string. Saving the new value to the database.
 func (h *HashService) AddingHash(inputKey string, typeHash string) (string, error) {
 
 	err := checkLengthString(inputKey)
 	if err != nil {
 		return "", err
 	}
+	// If the value is not in the database, then create a new one and save it.
 	hash, err := redisdb.CheckHash(inputKey, typeHash)
 	if err != nil {
 

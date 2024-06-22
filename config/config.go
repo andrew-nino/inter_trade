@@ -44,7 +44,7 @@ type (
 		Password string `yaml:"password" env:"REDIS_PASSWORD"`
 	}
 )
-
+// Reads the configuration from the specified path.
 func NewConfig(configPath string) (*Config, error) {
 	cfg := &Config{}
 

@@ -3,7 +3,7 @@ package redisdb
 import (
 	. "international_trade/pkg/redis"
 )
-
+// Creating a new record in the database.
 func CreateNewEntry(inputKey string, typeHash string, hash string) error {
 
 	fullKey := inputKey + "/" + typeHash
@@ -26,7 +26,7 @@ func DeleteHash(key string, typeHash string) error {
 	err := RedisClient.Del(fullKey).Err()
 	return err
 }
-
+// Checks for the presence of an already stored value.
 func CheckHash(inputKey string, typeHash string) (string, error) {
 
 	fullKey := inputKey + "/" + typeHash

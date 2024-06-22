@@ -19,7 +19,7 @@ import (
 	"international_trade/pkg/postgres"
 	"international_trade/pkg/redis"
 )
-
+// Application launch point. Initialization and start of critical components.
 func Run(configPath string) {
 
 	// Configuration
