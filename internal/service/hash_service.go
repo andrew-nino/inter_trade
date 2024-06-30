@@ -3,17 +3,20 @@ package service
 import (
 	"fmt"
 
-	"international_trade/internal/repo/pgdb"
-	"international_trade/internal/repo/redisdb"
+	"international_trade/internal/repository/pgdb"
+	"international_trade/internal/repository/redisdb"
 	. "international_trade/internal/service/processing"
 )
 
 type HashService struct {
-	repo pgdb.HashStorage
+	repoPG      pgdb.HashStorage
+	repoRedis redisdb.RecordStorage
 }
 
-func NewHashService(repos pgdb.HashStorage) *HashService {
-	return &HashService{repo: repos}
+func NewHashService(repos pgdb.HashStorage, repoRedis redisdb.RecordStorage) *HashService {
+	return &HashService{
+		repoPG:      repos,
+		repoRedis: repoRedis}
 }
 
 // Create a new hash if no existing value is found for the given string. Saving the new value to the database.
@@ -24,7 +27,7 @@ func (h *HashService) AddingHash(inputKey string, typeHash string) (string, erro
 		return "", err
 	}
 	// If the value is not in the database, then create a new one and save it.
-	hash, err := redisdb.CheckHash(inputKey, typeHash)
+	hash, err := h.repoRedis.CheckEntry(inputKey, typeHash)
 	if err != nil {
 
 		hash, err = Processing(inputKey, typeHash)
@@ -32,8 +35,14 @@ func (h *HashService) AddingHash(inputKey string, typeHash string) (string, erro
 			return "", err
 		}
 
-		redisdb.CreateNewEntry(inputKey, typeHash, hash)
-		h.repo.AddingHash(inputKey, typeHash, hash)
+		err = h.repoRedis.CreateNewEntry(inputKey, typeHash, hash)
+		if err != nil {
+			return "", fmt.Errorf("failed to create new entry in Redis: %w", err)
+		}
+		_, err = h.repoPG.AddingHash(inputKey, typeHash, hash)
+		if err != nil {
+			return "", fmt.Errorf("failed to create new entry in DB: %w", err)
+		}
 	}
 
 	return hash, err
@@ -44,7 +53,7 @@ func (h *HashService) GetHash(inputKey, typeHash string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	hash, err := redisdb.CheckHash(inputKey, typeHash)
+	hash, err := h.repoRedis.CheckEntry(inputKey, typeHash)
 	return hash, err
 }
 
@@ -54,11 +63,11 @@ func (h *HashService) DeleteHash(inputKey string, typeHash string) error {
 	if err != nil {
 		return err
 	}
-	err = redisdb.DeleteHash(inputKey, typeHash)
+	err = h.repoRedis.DeleteEntry(inputKey, typeHash)
 	if err != nil {
 		fmt.Errorf("error deleting hash on Redis: %w", err)
 	}
-	err = h.repo.DeleteHash(inputKey, typeHash)
+	err = h.repoPG.DeleteHash(inputKey, typeHash)
 	if err != nil {
 		fmt.Errorf("error deleting hash on PG: %w", err)
 	}

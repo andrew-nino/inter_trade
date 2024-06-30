@@ -9,9 +9,7 @@ import (
 	"international_trade/config"
 )
 
-var RedisClient *redis.Client
-
-func ConnectRedis(cfg *config.Config) {
+func ConnectRedis(cfg *config.Config) *redis.Client {
 
 	redisUri := fmt.Sprintf("%s:%s", cfg.REDIS.Host, cfg.REDIS.Port)
 	client := redis.NewClient(&redis.Options{
@@ -23,7 +21,7 @@ func ConnectRedis(cfg *config.Config) {
 	if _, redis_err := client.Ping().Result(); redis_err != nil {
 		log.Fatal("Error: Unable to connect to Redis")
 	}
-	RedisClient = client
-
 	log.Println("Redis init was completed")
+
+	return client
 }

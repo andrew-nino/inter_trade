@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"international_trade/internal/entity"
-	repo "international_trade/internal/repo/pgdb"
+	repo "international_trade/internal/repository/pgdb"
 
 	"github.com/dgrijalva/jwt-go"
 )

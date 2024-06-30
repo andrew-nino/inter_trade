@@ -2,7 +2,8 @@ package service
 
 import (
 	"international_trade/internal/entity"
-	repo "international_trade/internal/repo/pgdb"
+	postgres "international_trade/internal/repository/pgdb"
+	redis "international_trade/internal/repository/redisdb"
 )
 
 type Authorization interface {
@@ -22,9 +23,9 @@ type Service struct {
 	ServingString
 }
 
-func NewService(repos *repo.Repository) *Service {
+func NewService(reposPG *postgres.PG_Repository, reposRedis *redis.RedisRepository) *Service {
 	return &Service{
-		Authorization: NewAuthService(repos.Authorization),
-		ServingString: NewHashService(repos.HashStorage),
+		Authorization: NewAuthService(reposPG.Authorization),
+		ServingString: NewHashService(reposPG.HashStorage, reposRedis.RecordStorage),
 	}
 }
