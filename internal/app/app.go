@@ -12,13 +12,15 @@ import (
 
 	"international_trade/config"
 	handler "international_trade/internal/controller/http/v1"
-	repo "international_trade/internal/repo/pgdb"
+	repoPG "international_trade/internal/repository/pgdb"
+	repoRedis "international_trade/internal/repository/redisdb"
 	"international_trade/internal/service"
 
 	httpserver "international_trade/pkg/httpserver"
 	"international_trade/pkg/postgres"
 	"international_trade/pkg/redis"
 )
+
 // Application launch point. Initialization and start of critical components.
 func Run(configPath string) {
 
@@ -42,17 +44,21 @@ func Run(configPath string) {
 	// Migrates running
 	log.Info("Migrates running...")
 	m := NewMigration(cfg)
-	m.Steps(1)
+	err = m.Steps(1)
+	if err != nil {
+		log.Fatalf("failed to migrate db: %s", err.Error())
+	}
 
 	// Starting Redis
 	log.Info("Initializing Redis...")
-	redis.ConnectRedis(cfg)
+	rdb := redis.ConnectRedis(cfg)
 
 	// Services dependencies
 	log.Info("Initializing services...")
 
-	repos := repo.NewRepository(db)
-	service := service.NewService(repos)
+	repos := repoPG.NewPGRepository(db)
+	red := repoRedis.NewRedisRepository(rdb)
+	service := service.NewService(repos, red)
 	handlers := handler.NewHandler(service)
 
 	// HTTP server

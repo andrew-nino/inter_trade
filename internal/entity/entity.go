@@ -10,5 +10,5 @@ type User struct {
 }
 
 type StringToHash struct {
-	String    string    `db:"string"`
+	String string `db:"string"`
 }

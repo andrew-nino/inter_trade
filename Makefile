@@ -47,4 +47,4 @@ db-psql:
 	docker compose  exec postgres psql -Upostgres
 
 swag:
-	swag init -g cmd/main.go
+	swag init -g cmd/app/main.go

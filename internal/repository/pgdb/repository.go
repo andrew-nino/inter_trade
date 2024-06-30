@@ -6,11 +6,6 @@ import (
 	"international_trade/internal/entity"
 )
 
-const (
-	usersTable = "users"
-	hashTable = "hash_storage"
-)
-
 type Authorization interface {
 	CreateUser(user entity.User) (int, error)
 	GetUser(username, password string) (entity.User, error)
@@ -21,13 +16,13 @@ type HashStorage interface {
 	DeleteHash(input, typeHash string) error
 }
 
-type Repository struct {
+type PG_Repository struct {
 	Authorization
 	HashStorage
 }
 
-func NewRepository(db *sqlx.DB) *Repository {
-	return &Repository{
+func NewPGRepository(db *sqlx.DB) *PG_Repository {
+	return &PG_Repository{
 		Authorization: NewAuthPostgres(db),
 		HashStorage:   NewHashToPostgres(db),
 	}

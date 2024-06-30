@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type errorResponse struct{
+type errorResponse struct {
 	Message string `json:"message"`
 }
 
